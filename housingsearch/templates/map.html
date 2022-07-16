@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}{% load bootstrap5 %}{% load socialaccount %}
+{%bootstrap_messages %} {%bootstrap_javascript %} {% bootstrap_css %}
+
+<html lang="en">
+
+{% block content %}
+<body>
+
+    <meta charset="UTF-8">
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css' rel='stylesheet' />
+<div id='map' style='width: 100%; height: 610px;'></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZ2F2aW4tZ3VvIiwiYSI6ImNrdm9iZXozaGN3MXoycHQ5am5vOTIzajMifQ.gycEz65lfHwNqvAqZPjQhA';
+        const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            style: 'mapbox://styles/mapbox/streets-v11', // style URL
+            center: [-78.48, 38.03], // starting position [lng, lat]
+            zoom: 9 // starting zoom
+        });
+        {% for address in addresses %}
+        var marker = new mapboxgl.Marker()
+            .setLngLat([ {{address.long}}, {{address.lat}} ])
+            .setPopup(new mapboxgl.Popup().setHTML('<p><a href="{% url 'detail' address.id %}">{{address.address}}</a></p>'))
+            .addTo(map);
+        {% endfor %}
+    </script>
+</body>
+<!--<style>-->
+<!--  footer {-->
+<!--   position:absolute;-->
+<!--   bottom:0;-->
+<!--   width:100%;-->
+<!--   height:60px;   /* Height of the footer */-->
+<!--}-->
+<!--</style>-->
+{% endblock %}

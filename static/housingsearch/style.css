@@ -1,0 +1,23 @@
+li a {
+  color: green;
+}
+
+body {
+  background: rgb(0, 98, 255);
+   min-height: 400px;
+   margin-bottom: 100px;
+   clear: both;
+   display: block;
+
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 10px;
+  line-height: 15px;
+  background-color: #a1a1a1;
+  text-align: center;
+}
+

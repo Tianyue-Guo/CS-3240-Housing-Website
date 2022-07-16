@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
+
+<style>
+  body {
+    font-size: 16px;
+    background-color: #fcfcfc;
+  }
+
+  .head_text {
+    color: white;
+  }
+</style>
+<body style="background-color: purple">
+  <div class="col-md-12 card mb-4 mt-3">
+    <div class="card-body">
+      {% if new_post %}
+      <div class="alert alert-success" role="alert">
+        Your advice was published!
+      </div>
+      {% else %}
+
+      <h4>Leave Advice on Off-Grounds Housing!</h4>
+      <form
+        action="{% url 'save_advice'%}"
+        method="post"
+        style="margin-top: 1.3em"
+      >
+        {% csrf_token %}
+        <label for="title">Title:</label><br />
+        <input type="text" id="title" name="title" /><br />
+        <label for="body">Advice:</label><br />
+        <textarea id="body" name="body" rows="4" cols="50"></textarea
+        ><br /><br />
+        <button
+          type="submit"
+          class="btn btn-primary btn-md"
+          style="background-color: purple"
+        >
+          Submit
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</body>
+
+<style>
+  footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px; /* Height of the footer */
+  }
+</style>
+{% endblock %}

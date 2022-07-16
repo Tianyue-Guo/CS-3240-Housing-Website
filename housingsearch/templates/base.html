@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+{% load bootstrap5 %} {% bootstrap_css %} {% load static %}
+{%bootstrap_messages%} {% load socialaccount %} {% bootstrap_javascript %}
+
+<html lang="en">
+  {% if user.is_authenticated %}
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <!-- <p class="navbar-brand"><b>Off Grounds Housing</b></p> -->
+    <div class="card my-3"> <h5 class="card-header">Off Grounds Housing</h5></div>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" href="{% url 'home' %}">Find a House</a>
+        <a class="nav-item nav-link" href="{% url 'roommatefinder' %}"
+          >Roommate Finder</a
+        >
+        <a class="nav-item nav-link" href="{% url 'map' %}">Map</a>
+        <a class="nav-item nav-link" href="{% url 'advice' %}">Advice</a>
+        <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+      </div>
+      <div
+        class="collapse navbar-collapse justify-content-end"
+        style="padding: 10px"
+        id="navbarSupportedContent"
+      >
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  {% else %}
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="card my-3"> <h5 class="card-header">Off Grounds Housing</h5></div>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" href="{% url 'home' %}">Find a House</a>
+        <!--      <a class="nav-item nav-link" href="{% url 'roommatefinder' %}">Roommate Finder</a>-->
+        <a class="nav-item nav-link" href="{% url 'map' %}">Map</a>
+        <a class="nav-item nav-link" href="{% url 'advice' %}">Advice</a>
+      </div>
+      <div
+        class="collapse navbar-collapse justify-content-end"
+        style="padding: 10px"
+        id="navbarSupportedContent"
+      >
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a
+              class="nav-item nav-link"
+              href="{% provider_login_url 'google' %}"
+              >Log In</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  {% endif %} {% block content %}
+
+  <body>
+    <style>
+      body {
+        font-size: 12px;
+        background-color: #fdfdfd;
+      }
+      .shadow {
+        box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.1);
+      }
+      .btn-danger {
+        color: #fff;
+        background-color: #2d8659;
+        border-color: #26734d;
+      }
+      .masthead {
+        background: purple;
+        height: auto;
+        padding-bottom: 1px;
+        box-shadow: 0 16px 48px #e3e7eb;
+        padding-top: 5px;
+      }
+    </style>
+
+    <!-- Content Goes here -->
+    {% endblock %}
+  </body>
+
+  <footer class="footer text-center text-md-start bg-light">
+    <div class="container text-center p-4">
+      <p>Copyright: B-17 University of Virginia</p>
+    </div>
+  </footer>
+</html>

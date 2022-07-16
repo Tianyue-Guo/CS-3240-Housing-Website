@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %} {% bootstrap_css %} {% bootstrap_javascript %}
+{%bootstrap_messages %} {% load socialaccount %}
+<html lang="en">
+{% block title %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>edit user profile</title>
+    
+</head>
+{% endblock %}
+
+{% block content %}
+<style>
+  .btn-success {color: white;
+  background-color: purple;
+  border-color:purple;
+  }
+  .btn-success:hover{color: white;
+  background-color: purple;
+  border-color:purple;
+  }
+  </style>
+<legend style="color:white;background-color:purple;text-align:center;padding:15px"><h1>Edit Profile</h1></legend>
+
+      
+	<div class="row align-items-center" style="text-align:center;border-style:outset;">
+      <!-- left column -->
+      <div class="align-items-center">
+        <div class="text-center">
+          <img src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
+          width="150"
+          class="rounded-circle">
+          <h6>Name: {{profile.username}}</h6>
+        </div>    
+    </div>
+    
+
+  <!--        <p class="display-4" >Age: {{ profile.age }}</p>-->
+  <!--        <p class="display-4" >Age: {{ profile.gender }}</p>-->
+          <form action="{% url 'editprofile' %}" method="POST" style="text-align:center">
+              {% csrf_token %}
+              <fieldset>
+              <label for="age" name="age">Age: </label>
+              <input type="text" cols="8" rows="1" id="age" name="age" maxlength="3"></input>
+                  <br><br>
+  
+                  <div class="input-group mb-3 justify-content-center">
+                    <div class="input-group-prepend ">
+                      <label for="gender" name="gender" class="input-group-text" for="inputGroupSelect01">Gender: </label>
+                    </div>
+                    <select name="gender" id="gender" class="custom-select" id="inputGroupSelect01">
+                      <option selected>Choose...</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                    </select>
+                      <div class="input-group-prepend ">
+                      <label for="school_year" name="school_year" class="input-group-text" for="inputGroupSelect01">School Year: </label>
+                    </div>
+                    <select name="school_year" id="school_year" class="custom-select" id="inputGroupSelect02">
+                      <option selected>Choose...</option>
+                      <option value="First Year">First Year</option>
+                      <option value="Second Year">Second Year</option>
+                      <option value="Third Year">Third Year</option>
+                        <option value="Fourth Year">Fourth Year</option>
+                    </select>
+                  </div>
+                  <input type="submit" class="btn btn-success" value="Submit Change" />
+              </fieldset>
+          </form>
+      </div>
+  
+      <div class="col-lg-8" id='map' style='width: 50%; height: 500px;align-content: center;display: flex;margin-left: auto;
+      margin-right: auto;'></div>
+       
+      
+</body>
+{% endblock %}
+</html>

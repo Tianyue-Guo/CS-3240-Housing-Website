@@ -1,0 +1,23 @@
+{% block sidebar %}
+
+<style></style>
+
+<div class="col-md-4 float-right">
+  <div class="card my-4">
+    <h5 class="card-header">Rules</h5>
+    <div class="card-body">
+      <p class="card-text">1. Only use this for finding a roommmate</p>
+      <p class="card-text">
+        2. Posts should include what you are looking for in a roommate
+      </p>
+      <p class="card-text">
+        3. Include your price range if you don't have a place in mind or the
+        rent if you do
+      </p>
+    </div>
+  </div>
+  <div class= "text-center"><a href="{% url 'make_post' %}" class="btn btn-primary" style="background-color: purple">Make Post &rarr;</a></div>
+
+</div>
+
+{% endblock sidebar %}

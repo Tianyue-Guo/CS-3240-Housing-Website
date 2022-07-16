@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% extends 'base.html' %}{% load bootstrap5 %}
+    {% load socialaccount %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% block content %}
+  <head>
+    <meta charset="UTF-8" />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css' rel='stylesheet' />
+    <title>Housing Detail</title>
+  </head>
+
+
+  <body onload="loadDirToLawn()">
+
+
+    <legend style="color:white;background-color:purple;text-align:center;padding:15px"><h1>{{ housing.address }}</h1></legend>
+    <br><br><br>
+    <div class="row align-items-center">
+      <div class="col-lg-5">
+        <div class= "card offset-md-1 text-center border-dark rounded" style="border-style:solid">
+       <h1 class="card-header" style="color:white;background-color:purple">Information </h1>
+     <p class="display-6" >Rent: ${{ housing.rent }}</p>
+      <hr class="style2">
+      <p class="display-6">Bedrooms: {{ housing.bed }}</p>
+      <hr class="style2">
+      <p class="display-6">Bathrooms: {{ housing.bath }}</p>
+      <hr class="style2">
+      <p class="display-6">Square Feet: {{ housing.sqft }}</p>
+      <hr class="style2">
+        <p class="display-6" id="lawnDist">Distance to Lawn:</p>
+        <hr class="style2">
+      
+<img src="{{housing.image.url}}" width="80%" height="80%" style="margin: 2em; text-align-center">
+      
+          </div>  
+        </div>
+      
+
+    <div class="col-lg-6" id='map' style='width: 50%; height: 800px ;align-content: center;display: flex;margin-left: auto;
+    margin-right: auto;'></div>
+      </div>
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZ2F2aW4tZ3VvIiwiYSI6ImNrdm9iZXozaGN3MXoycHQ5am5vOTIzajMifQ.gycEz65lfHwNqvAqZPjQhA';
+        var coordinate = []
+    function CallRestService(request) {
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        script.setAttribute("src", request);
+        document.body.appendChild(script);
+    }
+
+    function DirectionCallBack(result){
+        data = result
+        console.log(data)
+        document.getElementById("lawnDist").innerHTML = "Distance to Lawn: " + data.resourceSets[0].resources[0].routeLegs[0].travelDistance.toFixed(2) +  " miles"
+        coords = data.resourceSets[0].resources[0].routeLegs[0].itineraryItems
+        coords.forEach(c => coordinate.push(c.maneuverPoint.coordinates.reverse()));
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZ2F2aW4tZ3VvIiwiYSI6ImNrdm9iZXozaGN3MXoycHQ5am5vOTIzajMifQ.gycEz65lfHwNqvAqZPjQhA';
+        const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            style: 'mapbox://styles/mapbox/streets-v11', // style URL
+            center: [-78.48, 38.03], // starting position [lng, lat]
+            zoom: 9 // starting zoom
+        });
+
+        var marker = new mapboxgl.Marker()
+        .setLngLat([ {{housing.long}}, {{housing.lat}} ])
+        .setPopup(new mapboxgl.Popup().setHTML('<p><a href="{% url 'detail' housing.id %}">{{housing.address}}</a></p>'))
+        .addTo(map);
+
+        var marker2 = new mapboxgl.Marker({"color":"red"})
+        .setLngLat([-78.5036,38.0352])
+        .setPopup(new mapboxgl.Popup().setHTML('<p>The Lawn</p>'))
+        .addTo(map);
+        map.on('load', () => {
+            map.addSource('route', {
+                'type': 'geojson',
+                    'data': {
+                        'type': 'Feature',
+                        'properties': {},
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': coordinate
+                        }
+                     }
+            });
+            map.addLayer({
+                'id': 'route',
+                'type': 'line',
+                'source': 'route',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': 'green',
+                    'line-width': 8
+                }
+            });
+        });
+    }
+    function loadDirToLawn(){
+        CallRestService("https://dev.virtualearth.net/REST/V1/Routes?wp.0={{housing.lat}},{{housing.long}}&wp.1=38.0352,-78.5036&du=mi&jsonp=DirectionCallBack&key=AnWFVz7w1WQ49CscOkTj5JBoZICeQ4sipfPNoU2dRVWjNqiDOVYpJXMYeuykdYQk")
+    }
+
+    </script>
+    <br><br><br><br><br>
+
+    <div class="row">
+        <legend style="color:white;background-color:purple;text-align:center;padding:15px"><h3>Review Section</h3></legend>
+    <div class="col-sm-6">
+    <form
+      action="{% url 'rate' housing.id %}"
+      method="post"
+
+    >
+
+
+      {% csrf_token %}
+      <fieldset>
+
+
+        {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+
+          {% if user.is_authenticated %}
+          <legend style="text-align:center"><h2 class="display-5">Submit a Review!</h2></legend>
+          {% else %}
+          <legend style="text-align:center"><h2 class="display-5">Log in Before Review!</h2></legend>
+          {% endif %}
+          {% if user.is_authenticated %}
+
+            {% for rating in housing.rating_set.all %}
+              <div class="form-check offset-md-6">
+                <input class="form-check-input"
+                  type="radio"
+                  name="choice"
+                  id="rating{{ forloop.counter }}"
+                  value="{{ rating.id }}"
+                />
+                <label class="form-check-label" for="rating{{ forloop.counter }}"
+                  >{{ rating.rate_text }}
+                </label>
+
+</div>
+            {% endfor %}
+
+
+          {% endif %}
+
+        
+<br><br><br>
+{% if user.is_authenticated %}
+    <div class="offset-md-3 form-group">
+            <label for="review" name="review">Review: </label>
+            <input class="form-control form-control-lg" type="text" id="review" name="review"><br><br>
+            <input type="submit" class="btn btn-primary" value="Rate and review!" />
+    </div>
+    {% endif %}
+      </fieldset>
+
+    </form>
+    </div>
+<div class="col-sm-6">
+<!--        <div class="col-sm-6">-->
+    <legend style="text-align:center">
+            <h2 class="display-5">Reviews</h2>
+            <p class="lead">Current Rating: {{average}}</p></legend>
+             {% for review in housing.review_set.all %}
+            <div class="card" style="width: 45rem;">
+
+                  <div class="card-body">
+                    <h5 class="card-title">{{review.name | title}}</h5>
+                    <p class="card-subtitle mb-2 text-muted">{{review.created_at}}</p>
+                    <p class="card-text">{{review.review_text}}</p>
+                  </div>
+            </div>
+            <br>
+<!--            <div class="text-center">{{review.name | title}} &#45;&#45; {{review.review_text}} &#45;&#45; {{review.created_at}}</div>-->
+            {% endfor %}
+<!--            <a href="{% url 'home' %}">HOME</a>-->
+    </legend>
+        </div>
+    </div>
+
+
+
+
+  </body>
+<br><br><br><br>
+{% endblock %}

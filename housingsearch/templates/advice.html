@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}{% load bootstrap5 %} {% bootstrap_css %} {%
+bootstrap_javascript %} {%bootstrap_messages %} {% load socialaccount %}
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Advice page</title>
+  </head>
+
+  {% block content %}
+  <body>
+    <header class="masthead">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-md-10 mx-auto">
+            <div class="site-heading" style="text-align: center">
+              <h2 class="site-heading my-4 mt-3 text-white">
+                Off-Grounds Housing Advice
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="row card-header text-center">
+      <div class = "col-md-3">
+        Title
+      </div>
+      <div class = "col-md-6">
+        Advice
+      </div>
+      <div class = "col-md-3">
+        Date Posted
+      </div>
+    </div>
+    <br />
+    {% if advice_list %} {% for advice in advice_list %}
+    <div class="row ">
+      <div class = "col-md-3 text-center">
+        <h5 style="padding: 5px"><b>{{ advice.title}}</b></h5>
+      </div>
+      <div class = "card col-md-6" style="background-color: rgb(233, 232, 232)">
+        <p style="padding: 5px">{{advice.body}}</p>
+      </div>
+      <div class = "col-md-3 text-center">
+        <p style="color: gray; padding: 5px">{{advice.created_on}}</p>      
+      </div>
+    </div>
+    <hr />
+    {% endfor %} {% else %}
+    <p>No advice is available.</p>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <div style="text-align: center">
+      <a
+        href="{% url 'advice_post'%}"
+        class="btn btn-primary"
+        style="background-color: purple"
+        >Add some advice for others looking for Off-Grounds Housing!</a
+      >
+    </div>
+    {% endif %}
+  </body>
+  <style>
+    body {
+      font-size: 16px;
+      background-color: #fcfcfc;
+    }
+
+    .head_text {
+      color: white;
+    }
+    .masthead {
+      background: purple;
+      height: auto;
+      padding-bottom: 1px;
+      box-shadow: 0 16px 48px #e3e7eb;
+      padding-top: 5px;
+    }
+
+    .card {
+      box-shadow: 0 16px 48px #e3e7eb;
+    }
+
+
+  
+  </style>
+
+  {% endblock %}
+</html>
